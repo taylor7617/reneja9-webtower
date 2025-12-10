@@ -1,1 +1,519 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1.0"
+  />
+  <title>RENÉJA9 WebTower | Digital Bone Collector</title>
 
+  <meta
+    name="description"
+    content="RENÉJA9 WebTower — Digital Bone Collector that turns Google, GitHub, and ChatGPT/Gemini into a Web Skeleton Factory for clients and towers."
+  />
+  <meta name="theme-color" content="#020617" />
+
+  <style>
+    :root {
+      --bg: #020617;
+      --bg-alt: #02040b;
+      --panel: #020817;
+      --border: #111827;
+      --accent: #eab308;
+      --accent-soft: rgba(234, 179, 8, 0.1);
+      --danger: #f97373;
+      --ok: #4ade80;
+      --text: #e5e7eb;
+      --text-soft: #9ca3af;
+      --ghost: #64748b;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100vh;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Text",
+        "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top left, #0b1120, #020617 60%, #000 100%),
+        url("https://images.pexels.com/photos/255379/pexels-photo-255379.jpeg?auto=compress&cs=tinysrgb&w=1200");
+      background-size: cover;
+      background-blend-mode: multiply;
+      color: var(--text);
+      display: flex;
+      flex-direction: column;
+    }
+
+    header {
+      padding: 16px 24px 10px 24px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      backdrop-filter: blur(16px);
+      background: linear-gradient(
+        to right,
+        rgba(15, 23, 42, 0.92),
+        rgba(15, 23, 42, 0.7),
+        rgba(8, 16, 32, 0.4)
+      );
+      position: sticky;
+      top: 0;
+      z-index: 10;
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+    }
+
+    .brand-title {
+      font-size: 1.1rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .brand-sub {
+      font-size: 0.8rem;
+      color: var(--text-soft);
+    }
+
+    .header-badges {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      align-items: center;
+    }
+
+    .pill {
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 4px 10px;
+      font-size: 0.75rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(15, 23, 42, 0.95);
+    }
+
+    .pill-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px var(--accent);
+    }
+
+    .pill-warn {
+      border-color: rgba(248, 250, 252, 0.2);
+      color: var(--text-soft);
+    }
+
+    .pill-ok {
+      border-color: rgba(74, 222, 128, 0.4);
+      color: var(--ok);
+    }
+
+    .hud-line {
+      padding: 6px 24px 4px 24px;
+      font-size: 0.75rem;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-soft);
+      border-bottom: 1px solid rgba(15, 23, 42, 0.9);
+      background: radial-gradient(circle at left, #020617, #020617 50%, #000 100%);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      opacity: 0.9;
+    }
+
+    .hud-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--accent);
+      box-shadow: 0 0 10px rgba(234, 179, 8, 0.9);
+    }
+
+    main {
+      flex: 1;
+      padding: 18px;
+      display: grid;
+      gap: 16px;
+      grid-template-columns: minmax(0, 1.1fr) minmax(0, 0.9fr);
+    }
+
+    .panel {
+      border-radius: 18px;
+      border: 1px solid var(--border);
+      background: radial-gradient(circle at top, #020617, #020617 60%, #000 100%);
+      backdrop-filter: blur(12px);
+      padding: 14px 16px;
+      box-shadow: 0 22px 45px rgba(0, 0, 0, 0.85);
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      min-height: 0;
+    }
+
+    .panel-title {
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--text-soft);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .panel-tag {
+      font-size: 0.7rem;
+      border-radius: 999px;
+      padding: 2px 8px;
+      border: 1px solid var(--border);
+      color: var(--ghost);
+    }
+
+    .panel-tag-live {
+      border-color: rgba(234, 179, 8, 0.6);
+      color: var(--accent);
+    }
+
+    .panel-body {
+      font-size: 0.86rem;
+      color: var(--text-soft);
+      line-height: 1.6;
+      overflow-y: auto;
+    }
+
+    .checklist {
+      list-style: none;
+      padding-left: 0;
+      margin: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .check-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 8px;
+    }
+
+    .check-box {
+      width: 14px;
+      height: 14px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      margin-top: 2px;
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .check-label strong {
+      color: var(--text);
+      font-weight: 500;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+      gap: 10px;
+      margin-top: 8px;
+    }
+
+    .mini {
+      border-radius: 12px;
+      border: 1px dashed var(--border);
+      padding: 10px 10px 9px 10px;
+      background: rgba(15, 23, 42, 0.85);
+      font-size: 0.8rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .mini-label {
+      font-size: 0.63rem;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--ghost);
+      margin-bottom: 4px;
+    }
+
+    .mini-main {
+      color: var(--text);
+      font-size: 0.82rem;
+    }
+
+    .mini-tag {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      font-size: 0.63rem;
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      color: var(--ghost);
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .btn {
+      border-radius: 999px;
+      font-size: 0.75rem;
+      padding: 7px 14px;
+      border: 1px solid var(--border);
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--text-soft);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: all 0.14s ease-out;
+    }
+
+    .btn-primary {
+      border-color: rgba(234, 179, 8, 0.7);
+      background: radial-gradient(circle at top, #facc15, #854d0e);
+      color: #0f172a;
+      box-shadow: 0 0 16px rgba(250, 204, 21, 0.7);
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 0 20px rgba(250, 204, 21, 0.9);
+    }
+
+    .btn-ghost:hover {
+      transform: translateY(-1px);
+      box-shadow: 0 8px 16px rgba(15, 23, 42, 0.9);
+    }
+
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      padding: 3px 8px;
+      font-size: 0.7rem;
+      color: var(--ghost);
+      margin-top: 6px;
+    }
+
+    .status-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 999px;
+      background: var(--danger);
+      box-shadow: 0 0 8px rgba(248, 113, 113, 0.7);
+    }
+
+    .status-dot.ok {
+      background: var(--ok);
+      box-shadow: 0 0 8px rgba(74, 222, 128, 0.7);
+    }
+
+    footer {
+      font-size: 0.75rem;
+      color: var(--text-soft);
+      padding: 8px 16px 14px 16px;
+      border-top: 1px solid var(--border);
+      background: rgba(3, 7, 18, 0.95);
+      display: flex;
+      justify-content: space-between;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    footer span {
+      opacity: 0.85;
+    }
+
+    @media (max-width: 900px) {
+      main {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="brand">
+      <div class="brand-title">RENÉJA9 WEBTOWER</div>
+      <div class="brand-sub">Digital Bone Collector · Web Skeleton Factory</div>
+    </div>
+    <div class="header-badges">
+      <div class="pill pill-warn">
+        <span class="pill-dot"></span>
+        <span>Abandoned Spacecraft Shell</span>
+      </div>
+      <div class="pill pill-ok">
+        <span>GI · GitHub · ChatGPT Locked In</span>
+      </div>
+    </div>
+  </header>
+
+  <div class="hud-line">
+    <span class="hud-dot"></span>
+    <span>WEBTOWER GRID ONLINE · SKELETON CHANNEL: ACTIVE · DELIVERY LOOP: ARMING</span>
+  </div>
+
+  <main>
+    <!-- LEFT: GI + skeleton workflow -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>GI ACCESS PANEL</span>
+        <span class="panel-tag panel-tag-live">GI · GOOGLE ID</span>
+      </div>
+      <div class="panel-body">
+        <p>
+          Use one **GI login** (Gmail address + password) as the master key for:
+        </p>
+        <ul class="checklist">
+          <li class="check-item">
+            <div class="check-box"></div>
+            <div class="check-label">
+              <strong>1 · Gmail</strong><br />
+              Open Gmail in one tab. This is your identity and communication anchor.
+            </div>
+          </li>
+          <li class="check-item">
+            <div class="check-box"></div>
+            <div class="check-label">
+              <strong>2 · Google Drive</strong><br />
+              Open Drive in a second tab. This holds docs, prompts, and client folders.
+            </div>
+          </li>
+          <li class="check-item">
+            <div class="check-box"></div>
+            <div class="check-label">
+              <strong>3 · GitHub</strong><br />
+              Sign in to GitHub with the same GI email. Each client = one repo = one Tower.
+            </div>
+          </li>
+          <li class="check-item">
+            <div class="check-box"></div>
+            <div class="check-label">
+              <strong>4 · ChatGPT / Gemini</strong><br />
+              Open ChatGPT or Gemini with this GI account. This is your **Skeleton Generator.**
+            </div>
+          </li>
+        </ul>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button">
+            START NEW WEB SKELETON
+          </button>
+          <button class="btn btn-ghost" type="button">
+            OPEN GI CHECKLIST
+          </button>
+        </div>
+
+        <div class="status-pill">
+          <span class="status-dot ok"></span>
+          <span>STATUS: READY FOR NEXT CLIENT</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- RIGHT: Skeleton factory + delivery status -->
+    <section class="panel">
+      <div class="panel-title">
+        <span>SKELETON FACTORY · DELIVERY LOOP</span>
+        <span class="panel-tag">Tower Ops</span>
+      </div>
+      <div class="panel-body">
+        <p>
+          For each new **Tower** (client, school, or world), you repeat the same
+          two-task pattern:
+        </p>
+
+        <ol class="checklist">
+          <li class="check-item">
+            <div class="check-box"></div>
+            <div class="check-label">
+              <strong>Task A · Generate Skeleton (ChatGPT / Gemini)</strong><br />
+              Prompt idea:<br />
+              “Generate a one-page static website skeleton for [CLIENT / SCHOOL] with
+              sections: Hero, Trophy/Portfolio, Contact, and FlightLine status footer.”
+            </div>
+          </li>
+          <li class="check-item">
+            <div class="check-box"></div>
+            <div class="check-label">
+              <strong>Task B · Build Repo + Publish (GitHub)</strong><br />
+              1) Create new repo on GitHub.<br />
+              2) Add `index.html` from the AI skeleton.<br />
+              3) Commit and enable GitHub Pages.<br />
+              4) Copy public URL into FlightLine maps + sheets.
+            </div>
+          </li>
+        </ol>
+
+        <div class="grid-2">
+          <div class="mini">
+            <div class="mini-label">DIGITAL DELIVERIES</div>
+            <div class="mini-main">
+              Future wiring for:
+              <ul>
+                <li>Stripe: payment + order status</li>
+                <li>Email receipts via GI</li>
+              </ul>
+            </div>
+            <div class="mini-tag">Stripe · GI</div>
+          </div>
+
+          <div class="mini">
+            <div class="mini-label">PHYSICAL DELIVERIES</div>
+            <div class="mini-main">
+              Future wiring for:
+              <ul>
+                <li>Wing.com partners for packages</li>
+                <li>“Ready for pickup” / “In transit” states</li>
+              </ul>
+            </div>
+            <div class="mini-tag">Wing.com</div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button">
+            TRACK TOWER ORDERS
+          </button>
+          <button class="btn btn-ghost" type="button">
+            VIEW ACTIVE WEBTOWERS
+          </button>
+        </div>
+
+        <div class="status-pill">
+          <span class="status-dot"></span>
+          <span>DELIVERY LOOP: MANUAL · FUTURE: AUTOMATED BY GEMINI</span>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span>RENÉJA9 · Digital Bone Collector — WebTower Shell v1.0</span>
+    <span>Stack: Google (GI) · GitHub · ChatGPT/Gemini · Stripe · Wing.com (planned)</span>
+  </footer>
+</body>
+</html>
